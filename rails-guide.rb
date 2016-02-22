@@ -204,13 +204,15 @@ class Article < ActiveRecord::Base
 end
 #so now when we destroy an article, all the posts associated with it will be destroyed as well.
 #__________________________
-# Let's say we have orders belonging to customers. Our Customer can either be 'active' or 'inactive'. What option can we pass our association so that we only pull the active customers? Bonus: Why would you want to use a technique like this?
+# Q:  Let's say we have orders belonging to customers. Our Customer can either be 'active' or 'inactive'. 
+#     What option can we pass our association so that we only pull the active customers?
+#     Bonus: Why would you want to use a technique like this?
 
 class User < ActiveRecord::Base
   attr_accessible :active
   has_many :accounts
 end
-
+# We would want to keep the access to the data open to specific users that are active.
 
 
 
@@ -256,7 +258,7 @@ end
 
 #---------------------------------
 # Q: What is a 'partial' and why would you use one? Provide an example file path and file name. Give an example of how you would call it within a template.
-#A: See "Refactoring techniques using Partials"
+# A:  See "Refactoring techniques using Partials"
 
 
 #----------------------------------
@@ -281,7 +283,10 @@ end
 # Questions
 #
 # Q: What is a controller? What is an action? How are they related? How are they used in a Rails app?
-# A: In the MVC model, C stands for Controllers. They are responsible for connecting the Model with the view. They create routes and make sure that the view display appropriate data passed from the Models. Actions are basically methods that are called on Controller class. By default when generating a Rails App we get all the CRUD actions for free: create, read, update, delete. 
+# A: In the MVC model, C stands for Controllers. They are responsible for connecting the Model with the view. 
+#    They create routes and make sure that the view display appropriate data passed from the Models.
+#    Actions are basically methods that are called on Controller class.
+#    By default when generating a Rails App we get all the CRUD actions for free: create, read, update, delete. 
 #___________________________________
 #
 # Q: What two keys will always be included in the params hash?
@@ -292,14 +297,17 @@ end
 # A: 
 #___________________________________
 #
-# Give an example of some code you might want to include in your Application Controller.
+# Q: Give an example of some code you might want to include in your Application Controller.
+# A: The ApplicationController contains code that can be run in all your controllers and it inherits 
+#   from Rails ActionController::Base class, so you would want to put some handy methods and filters in here.
+#   It can also be a kind of refactoring: bringing the methods that you want to be inherited by controllers or even views:
 
-class ApplicationController < ActionController::Base
-  
-  protect_from_forgery with: :exception
-
-
-end
+   class ApplicationController < ActionController::Base
+     helper_method :show #this will make it eccessable to the views as well as controllers
+     protect_from_forgery with: :exception
+   
+   
+   end
 #__________________________________________________________________________________________
 
 #
@@ -307,12 +315,25 @@ end
 #
 #               Questions
 #
-# What paths are automatically generated when using resources :users ?
+# Q: What paths are automatically generated when using resources :users ?
+# A: All the paths that would correspond the actions in your User_controller, which you can check by raking your routes.
+#______________________________________________
+# Q: Provide two ways you can see your routes. I don't mean the config/routes.rb file. How can you see the associated HTTP verb, the path, the controller#action, and the url_helper for each route in your application?
+# A: In terminal run "rake routs" or in your web browser: "localhost3000/rails/info/routes"
+#    URL_helper: provides a set of methods for making links and getting URLs that depend on the routing subsystem (see ActionController::Routing). This allows you to use the same format for links in views and controllers.
+
+#----------------------------------------------
+# Q: How do you set the root of your application?
+# A: Using routes method 'root' and the controller#action pair that u want to land on:
+# e.g
+      config/routes.rb:
+      root 'welcome#index'  #NB: The root route only routes GET requests to the action.
+#-----------------------------------------------------
+# Q: How can you customize your routes?
+# A: You can use the rocket syntax.
+# e.g:
+# 
+       get 'profiles/posts', :to => 'profiles#posts_index'
+#-----------------------------------------------------
 #
-# Provide two ways you can see your routes. I don't mean the config/routes.rb file. How can you see the associated HTTP verb, the path, the controller#action, and the url_helper for each route in your application?
-#
-# How do you set the root of your application?
-#
-# How can you customize your routes?
-#
-# How can you limit the format of what gets entered into the ':id' parameter of the following path: '/products/:id' ?
+# Q: How can you limit the format of what gets entered into the ':id' parameter of the following path: '/products/:id' ?
